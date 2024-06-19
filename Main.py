@@ -2,76 +2,76 @@ import tkinter
 import customtkinter
 from pytube import YouTube
 
-# Fungsi untuk memulai proses download video
-def startDownload():
+# Function to start the video download process
+def start_download():
     try:
-        # Membuat objek YouTube dengan URL yang dimasukkan pengguna
+        # Create a YouTube object with the URL entered by the user
         url = YouTube(url_var.get())
-        # Mengambil stream video pertama dan menjalankan fungsi on_progress saat proses download berlangsung
+        # Get the first video stream and run the on_progress function during the download process
         video = url.streams.first(on_progress_callback=on_progress)
-        # Mengonfigurasi label title dengan judul video dan warna teks putih
+        # Configure the title label with the video title and white text color
         title.configure(text=video.title, text_color="white")
-        # Mengosongkan label progress
+        # Clear the progress label
         progress.configure(text="")
-        # Memulai proses download video
+        # Start the video download process
         video.download()
-        # Menampilkan pesan sukses setelah proses download selesai
-        tkinter.messagebox.showinfo("Berhasil", "Video berhasil di download")
+        # Show a success message after the download process is complete
+        tkinter.messagebox.showinfo("Success", "Video downloaded successfully")
     except:
-        # Menampilkan pesan error jika link video tidak valid
-        tkinter.messagebox.showerror("Gagal", "Link video tidak valid")
-        
-# Fungsi untuk memperbarui progress bar saat proses download berlangsung
-def on_progress(stream, chunk, bytes_remaining):
-    # Menghitung ukuran total file video
-    total_size = stream.filesize
-    # Menghitung ukuran data yang sudah diunduh
-    bytes_downloaded = total_size - bytes_remaining
-    # Menghitung persentase proses download
-    Percentage_of_completion = bytes_downloaded / total_size * 100
-    # Mengonversi persentase ke string dan memperbarui label Percentage
-    per = str(int(Percentage_of_completion))
-    Percentage.configure(text=per + '%')
-    Percentage.update()
-    
-    # Memperbarui progress bar
-    progressBar.set(float(Percentage_of_completion) / 100)
+        # Show an error message if the video link is invalid
+        tkinter.messagebox.showerror("Failed", "Invalid video link")
 
-# Mengatur tampilan aplikasi sesuai dengan sistem operasi
+# Function to update the progress bar during the download process
+def on_progress(stream, chunk, bytes_remaining):
+    # Calculate the total file size of the video
+    total_size = stream.filesize
+    # Calculate the size of the data that has been downloaded
+    bytes_downloaded = total_size - bytes_remaining
+    # Calculate the percentage of the download process
+    percentage_of_completion = bytes_downloaded / total_size * 100
+    # Convert the percentage to a string and update the percentage label
+    percentage_str = str(int(percentage_of_completion))
+    percentage_label.configure(text=percentage_str + '%')
+    percentage_label.update()
+
+    # Update the progress bar
+    progress_bar.set(float(percentage_of_completion) / 100)
+
+# Set the appearance mode according to the operating system
 customtkinter.set_appearance_mode("System")
-# Mengatur tema warna aplikasi menjadi biru
+# Set the color theme of the application to blue
 customtkinter.set_default_color_theme("blue")
 
-# Membuat jendela aplikasi
+# Create the application window
 app = customtkinter.CTk()
 app.geometry("720x480")
-app.title("Youtube Video Downloader")
+app.title("YouTube Video Downloader")
 
-# Menambahkan label judul
-title = customtkinter.CTkLabel(app, text="Masukkan Link Video")
+# Add the title label
+title = customtkinter.CTkLabel(app, text="Enter Video Link")
 title.pack(padx=10, pady=10)
 
-# Menambahkan input field untuk memasukkan URL video
+# Add the input field for entering the video URL
 url_var = tkinter.StringVar()
 link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack()
 
-# Menambahkan tombol Download dan menghubungkannya dengan fungsi startDownload
-download = customtkinter.CTkButton(app, text="Download", command=startDownload)
-download.pack(padx=10, pady=10)
+# Add the Download button and connect it to the start_download function
+download_button = customtkinter.CTkButton(app, text="Download", command=start_download)
+download_button.pack(padx=10, pady=10)
 
-# Menambahkan label untuk menampilkan progress download
+# Add the label to display the download progress
 progress = customtkinter.CTkLabel(app, text="")
 progress.pack()
 
-# Menambahkan label untuk menampilkan persentase progress download
-Percentage = customtkinter.CTkLabel(app, text="0%")
-Percentage.pack()
+# Add the label to display the download progress percentage
+percentage_label = customtkinter.CTkLabel(app, text="0%")
+percentage_label.pack()
 
-# Menambahkan progress bar
-progressBar = customtkinter.CTkProgressBar(app, width=400)
-progressBar.set(0)
-progressBar.pack(padx=10, pady=10)
+# Add the progress bar
+progress_bar = customtkinter.CTkProgressBar(app, width=400)
+progress_bar.set(0)
+progress_bar.pack(padx=10, pady=10)
 
-# Menjalankan aplikasi
+# Run the application
 app.mainloop()
